@@ -105,19 +105,19 @@ func AtualizarUsuario(w http.ResponseWriter, r *http.Request) {
 
 	corpoRequisicao, erro := io.ReadAll(r.Body)
 	if erro != nil {
-		respostas.Erro(w, http.StatusUnprocessableEntity , erro)
+		respostas.Erro(w, http.StatusUnprocessableEntity, erro)
 		return
 	}
 
 	var usuario models.Usuario
 	if erro = json.Unmarshal(corpoRequisicao, &usuario); erro != nil {
 		respostas.Erro(w, http.StatusBadRequest, erro)
-		return 
+		return
 	}
 
 	if erro = usuario.Preparar("edicao"); erro != nil {
 		respostas.Erro(w, http.StatusBadRequest, erro)
-		return 
+		return
 	}
 
 	db, erro := db.Conectar()
@@ -128,7 +128,7 @@ func AtualizarUsuario(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	repositorio := repositories.NovoRepositorioUsuario(db)
-	if erro = repositorio.Atualizar(usuarioID, usuario ); erro != nil {
+	if erro = repositorio.Atualizar(usuarioID, usuario); erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
