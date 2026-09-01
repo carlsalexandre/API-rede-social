@@ -16,24 +16,24 @@ var rotasUsuarios = []Rota{
 		URI:          "/usuarios",
 		Metodo:       http.MethodGet,
 		Funcao:       controllers.BuscarUsuarios,
-		Autenticacao: false,
+		Autenticacao: true,
 	},
 	{
 		URI:          "/usuarios/{usuarioId}",
 		Metodo:       http.MethodGet,
 		Funcao:       controllers.BuscandoUsuario,
-		Autenticacao: false,
+		Autenticacao: true,
 	},
 	{
 		URI:          "/usuarios/{usuarioId}",
 		Metodo:       http.MethodPut,
 		Funcao:       controllers.AtualizarUsuario,
-		Autenticacao: false,
+		Autenticacao: true,
 	},
 	{
 		URI:          "/usuarios/{usuarioId}",
 		Metodo:       http.MethodDelete,
 		Funcao:       controllers.DeleteUsuario,
-		Autenticacao: false,
+		Autenticacao: true,
 	},
 }
