@@ -7,6 +7,7 @@ import (
 	"api/src/repositories"
 	"api/src/respostas"
 	"encoding/json"
+	"errors"
 	"io"
 	"net/http"
 	"strconv"
@@ -176,6 +177,41 @@ func DeleteUsuario(w http.ResponseWriter, r *http.Request) {
 
 	repositorio := repositories.NovoRepositorioUsuario(db)
 	if erro = repositorio.Deletar(usuarioID); erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	respostas.JSON(w, http.StatusNoContent, nil)
+}
+
+func SeguirUsuario(w http.ResponseWriter, r *http.Request) {
+	seguidorID, erro := authentication.ExtrairUsuarioID(r)
+	if erro != nil {
+		respostas.Erro(w, http.StatusUnauthorized, erro)
+		return 
+	}
+
+	parametros := mux.Vars(r)
+	usuarioID, erro := strconv.ParseUint(parametros["usuarioId"], 10, 64)
+	if erro != nil {
+		respostas.Erro(w, http.StatusBadRequest, erro)
+		return 
+	}
+
+	if seguidorID == usuarioID {
+		respostas.Erro(w, http.StatusForbidden, errors.New("Não é possível se seguir."))
+		return 
+	}
+
+	db, erro := db.Conectar()
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+	defer db.Close()
+
+	repositorio := repositories.NovoRepositorioUsuario(db)
+	if erro = repositorio.Seguir(usuarioID, seguidorID); erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
